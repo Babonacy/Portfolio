@@ -1,0 +1,601 @@
+﻿<Window x:Class="Plytoteka.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:local="clr-namespace:Plytoteka"
+        xmlns:vm="clr-namespace:Plytoteka.ViewModel"
+        mc:Ignorable="d"
+        Title="Płytoteka" Height="600" Width="800">
+
+    <Window.Resources>
+        <vm:MainViewModel x:Key="mainVM"/>
+    </Window.Resources>
+
+    <Grid DataContext="{StaticResource mainVM}">
+        <TabControl>
+            <!-- Zakladka Albumow -->
+            <TabItem x:Name="tab_albumy" Header="Albumy" Margin="0,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40px"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel x:Name="sp_albumy_lewy" Style="{StaticResource gray}"
+                                Grid.Column="0"
+                                Orientation="Horizontal" MinWidth="1"
+                                >
+                        <Button Content="Odśwież"
+                                Command="{Binding AlbumyLista.ZaladujWszystkieAlbumy}"/>
+                        <!--<Button Style="{StaticResource on_off_fixed}"
+                                Content="Tryb edycji: wył."/>-->
+                    </StackPanel>
+                    <StackPanel x:Name="sp_albumy_prawy" Style="{StaticResource gray}"
+                                Grid.Column="1"
+                                Orientation="Horizontal" MinWidth="1" HorizontalAlignment="Right"
+                                >
+                        <Button Content="Czyść"
+                                Command="{Binding AlbumyLista.CzyscFormularz}"/>
+                        <Button Content="Dodaj"
+                                Command="{Binding AlbumyLista.DodajAlbum}"
+                                IsEnabled="{Binding AlbumyLista.DodawanieDostepne, Mode=OneWay}"/>
+                        <Button Content="Edytuj"
+                                Command="{Binding AlbumyLista.EdytujAlbum}"
+                                IsEnabled="{Binding AlbumyLista.EdycjaDostepna, Mode=OneWay}"/>
+                        <Button Content="Usuń"
+                                Command="{Binding AlbumyLista.UsunAlbum}"/>
+                        <!--<Button Style="{StaticResource on_off_fixed}"
+                                Content="Tryb edycji: wył."/>-->
+                    </StackPanel>
+
+                    <DataGrid x:Name="dg_albumy"
+                              Grid.Row="1"
+                              IsReadOnly="True"
+                              HorizontalScrollBarVisibility="Visible"
+                              ItemsSource="{Binding AlbumyLista.Albumy}"
+                              SelectedItem="{Binding AlbumyLista.BiezacyAlbum}"
+                              SelectedIndex="{Binding AlbumyLista.IndeksZaznaczonegoAlbumu, Mode=TwoWay}"
+                              >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tytul" Binding="{Binding Tytul}"/>
+                            <DataGridTextColumn Header="Zespol" Binding="{Binding Zespol}" 
+                                                IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Rok wydania" Binding="{Binding DataWydania}"/>
+                            <DataGridTextColumn Header="Długość" Binding="{Binding Dlugosc}" 
+                                                IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Utwory" Binding="{Binding IleUtworow}"
+                                                IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Wydawca" Binding="{Binding Wydawca}"/>
+                            <DataGridTextColumn Header="Typ" Binding="{Binding Typ}"/>
+                        </DataGrid.Columns>
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding AlbumyLista.PokazSzczegolyAlbumu}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </DataGrid>
+                    <Grid Grid.Row="1" Grid.Column="1"
+                          Style="{StaticResource szczegoly}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60px"/>
+                            <RowDefinition Height="40px"/>
+                            <RowDefinition Height="60px"/>
+                            <RowDefinition Height="40px"/>
+                            <RowDefinition Height="60px"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Tytul -->
+                        <TextBox Grid.Row="0" Name="tytul_albumu"
+                                 FontSize="18"
+                                 Text="{Binding AlbumyLista.Tytul}" TextAlignment="Center"
+                                 />
+                        <Label Grid.Row="0"
+                               Content="Tytuł"/>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Zespol -->
+                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                <TextBlock Margin="0,0,10,0" Text="Zespół:"/>
+                                <ComboBox Name="zespol"
+                                      ItemsSource="{Binding AlbumyLista.Zespoly}"
+                                      SelectedValue="{Binding AlbumyLista.Zespol}"
+                                      SelectedIndex="{Binding AlbumyLista.IndeksZespolu}"
+                                      />
+                            </StackPanel>
+                            
+                            <!-- typ -->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Margin="0,0,10,0" Text="Typ:"/>
+                                <ComboBox Name="typ"
+                                      ItemsSource="{Binding AlbumyLista.Typy}"
+                                      SelectedValue="{Binding AlbumyLista.Typ}"
+                                      SelectedIndex="{Binding AlbumyLista.IndeksTypu}"
+                                      />
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60px"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Rok wydania -->
+                            <TextBox Name="rok_wydania" Grid.Column="0"
+                                         Text="{Binding AlbumyLista.DataWydania}" TextAlignment="Right"
+                                         Width="50px" Margin="0,10,5,10"
+                                         />
+                            <Label Grid.Column="0" Content="Rok"/>
+
+                            <!-- Wydawca -->
+                            <TextBox Name="wydawca" Grid.Column="1"
+                                     Text="{Binding AlbumyLista.Wydawca}" TextAlignment="Left"
+                                      Margin="5,10,0,10"
+                                         />
+                            <Label Grid.Column="1" Content="Wydawca"/>
+                        </Grid>
+
+                        <StackPanel x:Name="sp_skladowe" Style="{StaticResource gray}"
+                                Grid.Row="3"
+                                Orientation="Horizontal" MinWidth="1" HorizontalAlignment="Left"
+                                >
+                            <!-- Dodaj utwor -->
+                            <Button Content="Dodaj utwór"
+                                IsEnabled="{Binding AlbumyLista.DodawanieUtworuDostepne}"
+                                Command="{Binding AlbumyLista.DodajSkladowa}"/>
+                            <!-- Dodaj utwor -->
+                            <Button Content="Usuń utwór"
+                                Command="{Binding AlbumyLista.UsunSkladowa}"/>
+
+                        </StackPanel>
+                        
+                        <!-- Utwor -->
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="100px"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Tytul -->
+                            <StackPanel Grid.Column="0" Orientation="Vertical">
+                                <TextBlock Margin="0,0,10,0" Text="Utwór:"/>
+                                <ComboBox
+                                      ItemsSource="{Binding AlbumyLista.Utwory}"
+                                      SelectedValue="{Binding AlbumyLista.SkladowaUtworTytul}"
+                                      SelectedIndex="{Binding AlbumyLista.IndeksUtworu}"
+                                      />
+                            </StackPanel>
+
+                            <!-- Długosc -->
+                            <TextBox Grid.Column="1"
+                                             Text="{Binding AlbumyLista.SkladowaUtworDlugosc}" TextAlignment="Right"
+                                             Margin="10"
+                                             />
+                            <Label Grid.Column="1" Content="Długość (s)"/>
+                            
+                            <!-- Gatunek -->
+                            <StackPanel Grid.Column="2" Orientation="Vertical">
+                                <TextBlock Margin="0,0,10,0" Text="Gatunek:"/>
+                                <ComboBox
+                                      ItemsSource="{Binding AlbumyLista.Gatunki}"
+                                      SelectedValue="{Binding AlbumyLista.SkladowaUtworGatunek}"
+                                      SelectedIndex="{Binding AlbumyLista.IndeksGatunku}"
+                                      />
+                            </StackPanel>
+                        </Grid>
+
+                    <!-- Utwory lista -->
+                        <FrameworkElement x:Name="Proxy" Visibility="Collapsed"/>
+                        <DataGrid x:Name="dg_lista_utworow"
+                              Grid.Row="5"
+                              IsReadOnly="True"
+                              ItemsSource="{Binding AlbumyLista.Skladowe}"
+                              SelectedIndex="{Binding AlbumyLista.IndeksSkladowej}"
+                              >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Tytul" Binding="{Binding Utwor}"/>
+                                <DataGridTextColumn Header="Długość" Binding="{Binding Dlugosc}"/>
+                                <DataGridTextColumn Header="Gatunek" Binding="{Binding Gatunek}"/>
+                                
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                    
+                </Grid>
+            </TabItem>
+
+            <!-- Zakladka Artystow -->
+            <TabItem x:Name="tab_artysci" Header="Artyści" Margin="0,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40px"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Style="{StaticResource gray}"
+                                Grid.Column="0"
+                                Orientation="Horizontal" MinWidth="1"
+                                >
+                        <Button Content="Odśwież"
+                                Command="{Binding ArtysciLista.ZaladujWszystkichArtystow}"/>
+                        <!--<Button Style="{StaticResource on_off_fixed}"
+                                Content="Tryb edycji: wył."/>-->
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource gray}"
+                                Grid.Column="1"
+                                Orientation="Horizontal" MinWidth="1" HorizontalAlignment="Right"
+                                >
+                        <Button Content="Czyść"
+                                Command="{Binding ArtysciLista.CzyscFormularz}"/>
+                        <Button Content="Dodaj"
+                                Command="{Binding ArtysciLista.DodajArtyste}"
+                                IsEnabled="{Binding ArtysciLista.DodawanieDostepne, Mode=OneWay}"/>
+                        <Button Content="Edytuj"
+                                Command="{Binding ArtysciLista.EdytujArtyste}"
+                                IsEnabled="{Binding ArtysciLista.EdycjaDostepna, Mode=OneWay}"/>
+                        <Button Content="Usuń"
+                                Command="{Binding ArtysciLista.UsunArtyste}"/>
+                        <!--<Button Style="{StaticResource on_off_fixed}"
+                                Content="Tryb edycji: wył."/>-->
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1"
+                              IsReadOnly="True"
+                              HorizontalScrollBarVisibility="Visible"
+                              ItemsSource="{Binding ArtysciLista.Artysci}"
+                              SelectedItem="{Binding ArtysciLista.BiezacyArtysta}"
+                              SelectedIndex="{Binding ArtysciLista.IndeksZaznaczonegoArtysty, Mode=TwoWay}"
+                              >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Imię" Binding="{Binding Imie}"/>
+                            <DataGridTextColumn Header="Nazwisko" Binding="{Binding Nazwisko}"/>
+                            <DataGridTextColumn Header="Pseudonim" Binding="{Binding Pseudonim}"/>
+                            <DataGridTextColumn Header="Data urodzenia" Binding="{Binding DataUr}"/>
+                            <DataGridTextColumn Header="Początek kariery" Binding="{Binding StartKariery}"/>
+                        </DataGrid.Columns>
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding ArtysciLista.PokazSzczegolyArtysty}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </DataGrid>
+                    <Grid Grid.Row="1" Grid.Column="1"
+                          Style="{StaticResource szczegoly}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60px"/>
+                            <RowDefinition Height="60px"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Imie -->
+                            <TextBox Grid.Column="0"
+                                 FontSize="18" Margin="0,10,5,10"
+                                 Text="{Binding ArtysciLista.Imie}" TextAlignment="Center"
+                                 />
+                            <Label Grid.Column="0"
+                               Content="Imię"/>
+
+                            <!-- Nazwisko -->
+                            <TextBox Grid.Column="1"
+                                 FontSize="18" Margin="5,10,5,10"
+                                 Text="{Binding ArtysciLista.Nazwisko}" TextAlignment="Center"
+                                 />
+                            <Label Grid.Column="1"
+                               Content="Nazwisko"/>
+                        </Grid>
+                        
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="7*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Pseudonim -->
+                            <TextBox Grid.Column="0"
+                                         Text="{Binding ArtysciLista.Pseudonim}" TextAlignment="Left"
+                                         Margin="0,10,5,10"
+                                         />
+                            <Label Grid.Column="0" Content="Pseudonim"/>
+
+                            <!-- Data urodzenia -->
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding ArtysciLista.DataUr}" TextAlignment="Left"
+                                      Margin="5,10,0,10"
+                                         />
+                            <Label Grid.Column="1" Content="Data ur."/>
+
+                            <!-- Pocz kariery -->
+                            <TextBox Grid.Column="2"
+                                     Text="{Binding ArtysciLista.StartKariery}" TextAlignment="Left"
+                                      Margin="5,10,0,10"
+                                         />
+                            <Label Grid.Column="2" Content="Pocz. kariery"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <!-- Zakladka Utworow -->
+            <TabItem x:Name="tab_utwory" Header="Utwory" Margin="0,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40px"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Style="{StaticResource gray}"
+                                Grid.Column="0"
+                                Orientation="Horizontal" MinWidth="1"
+                                >
+                        <Button Content="Odśwież"
+                                Command="{Binding UtworyLista.ZaladujWszystkieUtwory}"/>
+                        <!--<Button Style="{StaticResource on_off_fixed}"
+                                Content="Tryb edycji: wył."/>-->
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource gray}"
+                                Grid.Column="1"
+                                Orientation="Horizontal" MinWidth="1" HorizontalAlignment="Right"
+                                >
+                        <Button Content="Czyść"
+                                Command="{Binding UtworyLista.CzyscFormularz}"/>
+                        <Button Content="Dodaj"
+                                Command="{Binding UtworyLista.DodajUtwor}"
+                                IsEnabled="{Binding UtworyLista.DodawanieDostepne, Mode=OneWay}"/>
+                        <Button Content="Edytuj"
+                                Command="{Binding UtworyLista.EdytujUtwor}"
+                                IsEnabled="{Binding UtworyLista.EdycjaDostepna, Mode=OneWay}"/>
+                        <Button Content="Usuń"
+                                Command="{Binding UtworyLista.UsunUtwor}"/>
+                        <!--<Button Style="{StaticResource on_off_fixed}"
+                                Content="Tryb edycji: wył."/>-->
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1"
+                              IsReadOnly="True"
+                              HorizontalScrollBarVisibility="Visible"
+                              ItemsSource="{Binding UtworyLista.Utwory}"
+                              SelectedItem="{Binding UtworyLista.BiezacyUtwor}"
+                              SelectedIndex="{Binding UtworyLista.IndeksZaznaczonegoUtworu, Mode=TwoWay}"
+                              >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tytuł" Binding="{Binding Tytul}"/>
+                            <DataGridTextColumn Header="Autor" Binding="{Binding Autor}"/>
+                            <DataGridTextColumn Header="Język" Binding="{Binding Jezyk}"/>
+                        </DataGrid.Columns>
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding UtworyLista.PokazSzczegolyUtworu}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </DataGrid>
+                    <Grid Grid.Row="1" Grid.Column="1"
+                          Style="{StaticResource szczegoly}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60px"/>
+                            <RowDefinition Height="60px"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBox Grid.Row="0"
+                                 FontSize="18" Margin="0,10,5,10"
+                                 Text="{Binding UtworyLista.Tytul}" TextAlignment="Center"
+                                 />
+                        <Label Grid.Column="0"
+                               Content="Tytul"/>
+
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Pseudonim -->
+                            <TextBox Grid.Column="0"
+                                         Text="{Binding UtworyLista.Autor}" TextAlignment="Left"
+                                         Margin="0,10,5,10"
+                                         />
+                            <Label Grid.Column="0" Content="Autor"/>
+
+                            <!-- Data urodzenia -->
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding UtworyLista.Jezyk}" TextAlignment="Left"
+                                      Margin="5,10,0,10"
+                                         />
+                            <Label Grid.Column="1" Content="Jęyk"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <!-- Zakladka Zespolow -->
+            <TabItem x:Name="tab_zespoly" Header="Zespoly" Margin="0,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40px"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Style="{StaticResource gray}"
+                                Grid.Column="0"
+                                Orientation="Horizontal" MinWidth="1"
+                                >
+                        <Button Content="Odśwież"
+                                Command="{Binding ZespolyLista.ZaladujWszystkieZespoly}"/>
+                        <!--<Button Style="{StaticResource on_off_fixed}"
+                                Content="Tryb edycji: wył."/>-->
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource gray}"
+                                Grid.Column="1"
+                                Orientation="Horizontal" MinWidth="1" HorizontalAlignment="Right"
+                                >
+                        <Button Content="Czyść"
+                                Command="{Binding ZespolyLista.CzyscFormularz}"/>
+                        <Button Content="Dodaj"
+                                Command="{Binding ZespolyLista.DodajZespol}"
+                                IsEnabled="{Binding ZespolyLista.DodawanieDostepne, Mode=OneWay}"/>
+                        <Button Content="Edytuj"
+                                Command="{Binding ZespolyLista.EdytujZespol}"
+                                IsEnabled="{Binding ZespolyLista.EdycjaDostepna, Mode=OneWay}"/>
+                        <Button Content="Usuń"
+                                Command="{Binding ZespolyLista.UsunZespol}"/>
+                        <!--<Button Style="{StaticResource on_off_fixed}"
+                                Content="Tryb edycji: wył."/>-->
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1"
+                              IsReadOnly="True"
+                              HorizontalScrollBarVisibility="Visible"
+                              ItemsSource="{Binding ZespolyLista.Zespoly}"
+                              SelectedItem="{Binding ZespolyLista.BiezacyZespol}"
+                              SelectedIndex="{Binding ZespolyLista.IndeksZaznaczonegoZespolu, Mode=TwoWay}"
+                              >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="nazwa" Binding="{Binding Nazwa}"/>
+                            <DataGridTextColumn Header="Data założenia" Binding="{Binding DataZalozenia}"/>
+                            <DataGridTextColumn Header="Pochodzenie" Binding="{Binding Pochodzenie}"/>
+                        </DataGrid.Columns>
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding ZespolyLista.PokazSzczegolyZespolu}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </DataGrid>
+                    <Grid Grid.Row="1" Grid.Column="1"
+                          Style="{StaticResource szczegoly}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60px"/>
+                            <RowDefinition Height="60px"/>
+                            <RowDefinition Height="40px"/>
+                            <RowDefinition Height="60px"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Tytul -->
+                        <TextBox Grid.Row="0"
+                                 FontSize="18"
+                                 Text="{Binding ZespolyLista.Nazwa}" TextAlignment="Center"
+                                 />
+                        <Label Grid.Row="0"
+                               Content="Nazwa zespołu"/>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="7*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Rok wydania -->
+                            <TextBox Grid.Column="0"
+                                         Text="{Binding ZespolyLista.DataZalozenia}" TextAlignment="Right"
+                                         Margin="0,10,5,10"
+                                         />
+                            <Label Grid.Column="0" Content="Rok zał."/>
+
+                            <!-- Wydawca -->
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding ZespolyLista.Pochodzenie}" TextAlignment="Left"
+                                      Margin="5,10,0,10"
+                                         />
+                            <Label Grid.Column="1" Content="Pochodzenie"/>
+                        </Grid>
+
+                        <StackPanel Style="{StaticResource gray}"
+                                Grid.Row="2"
+                                Orientation="Horizontal" MinWidth="1" HorizontalAlignment="Left"
+                                >
+                            <!-- Dodaj utwor -->
+                            <Button Content="Dodaj artystę"
+                                IsEnabled="{Binding ZespolyLista.DodawanieArtystyDostepne}"
+                                Command="{Binding ZespolyLista.DodajCzlonka}"/>
+                            <!-- Dodaj utwor -->
+                            <Button Content="Usuń artystę"
+                                Command="{Binding ZespolyLista.UsunCzlonka}"/>
+
+                        </StackPanel>
+
+                        <!-- Utwor -->
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="100px"/>
+                                <ColumnDefinition Width="100px"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Tytul -->
+                            <StackPanel Grid.Column="0" Orientation="Vertical">
+                                <TextBlock Margin="0,0,10,0" Text="Artysta:"/>
+                                <ComboBox
+                                      ItemsSource="{Binding ZespolyLista.Artysci}"
+                                      SelectedValue="{Binding ZespolyLista.CzlonekArtysta}"
+                                      SelectedIndex="{Binding ZespolyLista.IndeksArtysty}"
+                                      />
+                            </StackPanel>
+
+                            <!-- Długosc -->
+                            <TextBox Grid.Column="1"
+                                             Text="{Binding ZespolyLista.CzlonekStartWspolpracy}" TextAlignment="Right"
+                                             Margin="10"
+                                             />
+                            <Label Grid.Column="1" Content="Pocz. współp."/>
+
+                            <TextBox Grid.Column="2"
+                                             Text="{Binding ZespolyLista.CzlonekKoniecWspolpracy}" TextAlignment="Right"
+                                             Margin="10"
+                                             />
+                            <Label Grid.Column="2" Content="Kon. współp."/>
+                        </Grid>
+
+                        <!-- Utwory lista -->
+                        <DataGrid
+                              Grid.Row="5"
+                              IsReadOnly="True"
+                              ItemsSource="{Binding ZespolyLista.Czlonkowie}"
+                              SelectedIndex="{Binding ZespolyLista.IndeksCzlonka}"
+                              >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Artysta" Binding="{Binding Artysta}"/>
+                                <DataGridTextColumn Header="Początek współpracy" Binding="{Binding StartWspolpracy}"/>
+                                <DataGridTextColumn Header="Koniec współpracy" Binding="{Binding KoniecWspolpracy}"/>
+
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+        
+    </Grid>
+    
+    
+</Window>
