@@ -1,0 +1,8 @@
+﻿  Wąż Projekt.cpp
+C:\Users\Witam\Documents\programowanko\Wąż Projekt\Wąż Projekt.cpp(84,21): warning C4018: ">": niezgodność typu ze znakiem/bez znaku
+C:\Users\Witam\Documents\programowanko\Wąż Projekt\Wąż Projekt.cpp(137,25): warning C4552: „-”: Wynik wyrażenia nie jest używany
+C:\Users\Witam\Documents\programowanko\Wąż Projekt\Wąż Projekt.cpp(170,35): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Witam\Documents\programowanko\Wąż Projekt\Wąż Projekt.cpp(206,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\Witam\Documents\programowanko\Wąż Projekt\Wąż Projekt.cpp(216,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\Witam\Documents\programowanko\Wąż Projekt\Wąż Projekt.cpp(263,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+  Wąż Projekt.vcxproj -> C:\Users\Witam\Documents\programowanko\Wąż Projekt\Debug\Wąż Projekt.exe

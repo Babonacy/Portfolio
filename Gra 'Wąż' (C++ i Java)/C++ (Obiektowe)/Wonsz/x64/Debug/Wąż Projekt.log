@@ -1,0 +1,5 @@
+﻿  Wąż Projekt.cpp
+C:\Users\Witam\Documents\programowanko\Wąż Projekt\Wąż Projekt.cpp(205,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\Witam\Documents\programowanko\Wąż Projekt\Wąż Projekt.cpp(215,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\Witam\Documents\programowanko\Wąż Projekt\Wąż Projekt.cpp(261,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+  Wąż Projekt.vcxproj -> C:\Users\Witam\Documents\programowanko\Wąż Projekt\x64\Debug\Wąż Projekt.exe
